@@ -1,0 +1,69 @@
+﻿@model List<ResultDto>
+@{
+    ViewData["Title"] = "My Results";
+}
+
+<h1 class="h3 mb-3">My Results</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No results yet. Once an organiser records your finish time, it will appear here.
+    </div>
+}
+else
+{
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-6">@Model.Count</div>
+                    <div class="text-muted">Races completed</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-6">@Model.Min(r => r.FinishPosition)</div>
+                    <div class="text-muted">Best finishing position</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Finish time</th>
+                    <th>Position</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td>@r.EventName</td>
+                        <td>@r.EventDate.ToString("dd MMM yyyy")</td>
+                        <td>@r.CategoryName</td>
+                        <td class="fw-semibold">@TimeFormat.Hms(r.FinishTimeSeconds)</td>
+                        <td>
+                            @if (r.FinishPosition <= 3)
+                            {
+                                <span class="badge bg-warning text-dark">@r.FinishPosition</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@r.FinishPosition</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

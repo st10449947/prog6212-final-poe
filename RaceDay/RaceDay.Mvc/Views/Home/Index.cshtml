@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Welcome";
+    var userId = Context.Session.GetInt32("UserId");
+    var role = Context.Session.GetString("Role");
+}
+
+<section class="hero text-center text-md-start">
+    <p class="hero-kicker">South African road running, walking and cycling</p>
+    <h1 class="display-4 fw-bold">Race<span>Day</span></h1>
+    <p class="lead mb-4">
+        Create events, enter races and track your results, all in one place.
+    </p>
+
+    @if (userId == null)
+    {
+        <a class="btn btn-success btn-lg me-md-2" asp-controller="Auth" asp-action="Register">Get started</a>
+        <a class="btn btn-outline-light btn-lg" asp-controller="Auth" asp-action="Login">Log in</a>
+    }
+    else if (role == "Organiser")
+    {
+        <a class="btn btn-success btn-lg" asp-controller="Organiser" asp-action="Index">Go to my dashboard</a>
+    }
+    else
+    {
+        <a class="btn btn-success btn-lg" asp-controller="Participant" asp-action="Index">Browse upcoming events</a>
+    }
+</section>
+
+<div class="row g-4 mt-1">
+    <div class="col-md-4">
+        <div class="card feature-card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5">For organisers</h2>
+                <p class="mb-0 text-muted">Create events, set up categories, see who has entered and record finish times.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card feature-card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5">For participants</h2>
+                <p class="mb-0 text-muted">Browse upcoming events, enter in the category that suits you and follow your entries.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card feature-card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5">Track your results</h2>
+                <p class="mb-0 text-muted">See your finish times and positions in one list, race after race.</p>
+            </div>
+        </div>
+    </div>
+</div>

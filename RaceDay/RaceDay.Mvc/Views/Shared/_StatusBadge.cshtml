@@ -1,0 +1,18 @@
+﻿@model string
+
+@if (Model == "Confirmed")
+{
+    <span class="badge bg-success">Confirmed</span>
+}
+else if (Model == "Pending")
+{
+    <span class="badge bg-warning text-dark">Pending</span>
+}
+else if (Model == "Cancelled")
+{
+    <span class="badge bg-danger">Cancelled</span>
+}
+else
+{
+    <span class="badge bg-secondary">@Model</span>
+}

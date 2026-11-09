@@ -1,0 +1,46 @@
+﻿@model List<EnrolmentDto>
+@{
+    ViewData["Title"] = "My Events";
+}
+
+<h1 class="h3 mb-3">My Events</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        You have not entered any events yet.
+        <a asp-action="Index">Browse upcoming events</a>.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Entered</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var en in Model)
+                {
+                    <tr>
+                        <td>@en.EventName</td>
+                        <td>@en.EventDate.ToString("dd MMM yyyy")</td>
+                        <td>@en.CategoryName</td>
+                        <td>@en.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                        <td><partial name="_StatusBadge" model="en.Status" /></td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-dark" asp-action="Details" asp-route-id="@en.EventId">View event</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

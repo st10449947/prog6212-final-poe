@@ -1,0 +1,269 @@
+/* ================= RaceDay theme ================= */
+
+:root {
+    --rd-navy: #0f1b2d;
+    --rd-navy-light: #1c2f4d;
+    --rd-orange: #ff6b1a;
+    --rd-orange-dark: #e0560a;
+    --rd-bg: #f4f6fa;
+    --bs-link-color-rgb: 214, 80, 8;
+    --bs-link-hover-color-rgb: 168, 60, 4;
+}
+
+html {
+    font-size: 15px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    background-color: var(--rd-bg);
+    color: #1d2733;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+    /* The page content grows to fill the screen, which keeps the footer at the bottom */
+    body > .container {
+        flex: 1 0 auto;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--rd-navy);
+    font-weight: 700;
+}
+
+/* ---------- Navigation ---------- */
+
+.navbar-raceday {
+    background: linear-gradient(90deg, var(--rd-navy), var(--rd-navy-light));
+    border-bottom: 3px solid var(--rd-orange);
+}
+
+    .navbar-raceday .navbar-brand {
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        color: #fff;
+    }
+
+        .navbar-raceday .navbar-brand span {
+            color: var(--rd-orange);
+        }
+
+    .navbar-raceday .nav-link {
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+        border-bottom: 2px solid transparent;
+    }
+
+        .navbar-raceday .nav-link:hover {
+            color: #fff;
+        }
+
+        .navbar-raceday .nav-link.active {
+            color: #fff;
+            border-bottom-color: var(--rd-orange);
+        }
+
+    .navbar-raceday .navbar-text {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+.role-pill {
+    background: var(--rd-orange);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+}
+
+/* ---------- Buttons ---------- */
+/* Our views use btn-success for the main action, so recolour it to the RaceDay orange */
+
+.btn {
+    border-radius: 0.5rem;
+}
+
+.btn-success {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--rd-orange);
+    --bs-btn-border-color: var(--rd-orange);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--rd-orange-dark);
+    --bs-btn-hover-border-color: var(--rd-orange-dark);
+    --bs-btn-focus-shadow-rgb: 255, 107, 26;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--rd-orange-dark);
+    --bs-btn-active-border-color: var(--rd-orange-dark);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: var(--rd-orange);
+    --bs-btn-disabled-border-color: var(--rd-orange);
+    font-weight: 600;
+}
+
+.btn-outline-dark {
+    --bs-btn-color: var(--rd-navy);
+    --bs-btn-border-color: var(--rd-navy);
+    --bs-btn-hover-bg: var(--rd-navy);
+    --bs-btn-hover-border-color: var(--rd-navy);
+    --bs-btn-active-bg: var(--rd-navy);
+    --bs-btn-active-border-color: var(--rd-navy);
+}
+
+/* ---------- Forms ---------- */
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: var(--rd-orange);
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 26, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--rd-orange);
+    border-color: var(--rd-orange);
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+    border: 1px solid #e3e8ef;
+    border-radius: 0.9rem;
+}
+
+    /* Event cards lift slightly when you point at them */
+    .card.h-100 {
+        overflow: hidden;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+        .card.h-100:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0.6rem 1.2rem rgba(15, 27, 45, 0.15) !important;
+        }
+
+    /* Big numbers on the dashboard and My Results summary cards */
+    .card .display-6 {
+        color: var(--rd-orange);
+        font-weight: 800;
+    }
+
+.card-header {
+    background: var(--rd-navy);
+    color: #fff;
+    border-radius: 0.9rem 0.9rem 0 0 !important;
+}
+
+    .card-header .text-muted {
+        color: rgba(255, 255, 255, 0.65) !important;
+    }
+
+.auth-card,
+.feature-card {
+    border-top: 4px solid var(--rd-orange);
+}
+
+/* ---------- Tables ---------- */
+
+.table thead th {
+    background: var(--rd-navy);
+    color: #fff;
+    border-bottom: 0;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.table-hover > tbody > tr:hover > * {
+    --bs-table-hover-bg: rgba(255, 107, 26, 0.07);
+}
+
+.table-responsive {
+    background: #fff;
+    border-radius: 0.75rem;
+}
+
+/* ---------- Badges and alerts ---------- */
+
+.badge {
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.alert {
+    border: 0;
+    border-radius: 0.75rem;
+}
+
+/* ---------- Home page hero ---------- */
+
+.hero {
+    background: linear-gradient(135deg, var(--rd-navy) 0%, var(--rd-navy-light) 60%, #27456f 100%);
+    color: #fff;
+    border-radius: 1.25rem;
+    border-bottom: 5px solid var(--rd-orange);
+    padding: 3.5rem 2rem;
+}
+
+    .hero h1 {
+        color: #fff;
+        letter-spacing: -0.5px;
+    }
+
+        .hero h1 span {
+            color: var(--rd-orange);
+        }
+
+    .hero .lead {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+.hero-kicker {
+    color: var(--rd-orange);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+/* ---------- Footer ---------- */
+
+.rd-footer {
+    background: var(--rd-navy);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-top: auto;
+    padding: 1rem 0;
+}
+
+    .rd-footer .container {
+        gap: 0.5rem;
+    }
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 575.98px) {
+    .hero {
+        padding: 2.25rem 1.25rem;
+    }
+
+        .hero h1 {
+            font-size: 2.4rem;
+        }
+
+        .hero .btn-lg {
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+}

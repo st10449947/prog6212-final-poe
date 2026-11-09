@@ -1,0 +1,64 @@
+﻿@model List<EventEnrolmentsVm>
+@{
+    ViewData["Title"] = "Enrolments";
+}
+
+<h1 class="h3 mb-3">Enrolments</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You have no events yet, so there are no enrolments to show.</div>
+}
+
+@foreach (var group in Model)
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            <strong>@group.Event.EventName</strong>
+            <span class="text-muted">&middot; @group.Event.EventDate.ToString("dd MMM yyyy")</span>
+        </div>
+        <div class="card-body p-0">
+            @if (!group.Enrolments.Any())
+            {
+                <p class="text-muted m-3">Nobody has entered this event yet.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Participant</th>
+                                <th>Category</th>
+                                <th>Entered</th>
+                                <th>Status</th>
+                                <th>Change status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var en in group.Enrolments)
+                            {
+                                <tr>
+                                    <td>@en.ParticipantName</td>
+                                    <td>@en.CategoryName</td>
+                                    <td>@en.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                                    <td><partial name="_StatusBadge" model="en.Status" /></td>
+                                    <td>
+                                        <form asp-action="UpdateEnrolmentStatus" asp-route-id="@en.EnrolmentId" method="post" class="d-flex gap-2">
+                                            <select name="status" class="form-select form-select-sm" style="width:auto">
+                                                <option value="Pending" selected="@(en.Status == "Pending")">Pending</option>
+                                                <option value="Confirmed" selected="@(en.Status == "Confirmed")">Confirmed</option>
+                                                <option value="Cancelled" selected="@(en.Status == "Cancelled")">Cancelled</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-outline-dark">Update</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+}

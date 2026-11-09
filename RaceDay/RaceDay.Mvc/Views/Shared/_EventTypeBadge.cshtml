@@ -1,0 +1,55 @@
+﻿@model ParticipantEventsVm
+@{
+    ViewData["Title"] = "Upcoming Events";
+}
+
+<h1 class="h3 mb-1">Upcoming Events</h1>
+<p class="text-muted">Welcome, @Context.Session.GetString("DisplayName"). Find your next race.</p>
+
+<form method="get" asp-action="Index" class="row g-2 mb-4">
+    <div class="col-md-6">
+        <input type="text" name="search" value="@Model.Search" class="form-control"
+               placeholder="Search by event name or location" />
+    </div>
+    <div class="col-md-3">
+        <select name="type" class="form-select">
+            <option value="">All types</option>
+            <option value="Running" selected="@(Model.Type == "Running")">Running</option>
+            <option value="Walking" selected="@(Model.Type == "Walking")">Walking</option>
+            <option value="Cycling" selected="@(Model.Type == "Cycling")">Cycling</option>
+        </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+        <button type="submit" class="btn btn-success flex-fill">Filter</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Clear</a>
+    </div>
+</form>
+
+@if (!Model.Events.Any())
+{
+    <div class="alert alert-info">
+        No upcoming events match your search. Try clearing the filters.
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var ev in Model.Events)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h2 class="h5 card-title mb-0">@ev.EventName</h2>
+                            <partial name="_EventTypeBadge" model="ev.EventType" />
+                        </div>
+                        <p class="mb-1"><strong>@ev.EventDate.ToString("dddd, dd MMM yyyy")</strong></p>
+                        <p class="mb-1 text-muted">@ev.Location</p>
+                        <p class="text-muted">@ev.Distance km</p>
+                        <a class="btn btn-success mt-auto" asp-action="Details" asp-route-id="@ev.EventId">View details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

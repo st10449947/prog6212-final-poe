@@ -1,0 +1,91 @@
+﻿@model OrganiserDashboardVm
+@{
+    ViewData["Title"] = "Organiser Dashboard";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-0">Organiser Dashboard</h1>
+        <p class="text-muted mb-0">Welcome, @Context.Session.GetString("DisplayName").</p>
+    </div>
+    <a class="btn btn-success" asp-action="CreateEvent">+ New event</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="display-6">@Model.TotalEvents</div>
+                <div class="text-muted">Events</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="display-6">@Model.UpcomingEvents</div>
+                <div class="text-muted">Upcoming</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="display-6">@Model.TotalEnrolments</div>
+                <div class="text-muted">Active enrolments</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="h5">Your events</h2>
+
+@if (!Model.Events.Any())
+{
+    <div class="alert alert-info">
+        You have not created any events yet. Use <strong>New event</strong> to add your first one.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Type</th>
+                    <th>Enrolments</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ev in Model.Events.OrderBy(e => e.EventDate))
+                {
+                    <tr>
+                        <td>@ev.EventName</td>
+                        <td>
+                            @ev.EventDate.ToString("dd MMM yyyy")
+                            @if (ev.EventDate.Date >= DateTime.Today)
+                            {
+                                <span class="badge bg-success">Upcoming</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Past</span>
+                            }
+                        </td>
+                        <td>@ev.Location</td>
+                        <td>@ev.EventType</td>
+                        <td>@ev.EnrolmentCount</td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-dark" asp-action="Categories" asp-route-eventId="@ev.EventId">Categories</a>
+                            <a class="btn btn-sm btn-outline-dark" asp-action="EditEvent" asp-route-id="@ev.EventId">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

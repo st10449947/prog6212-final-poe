@@ -1,0 +1,77 @@
+﻿@model ResultsPageVm
+@{
+    ViewData["Title"] = "Results";
+}
+
+<h1 class="h3 mb-3">Results</h1>
+
+@if (Model.SelectedEvent == null)
+{
+    <div class="alert alert-info">Create an event first. Results are recorded for people who entered your events.</div>
+}
+else
+{
+    <form method="get" asp-action="Results" class="row g-2 mb-4">
+        <div class="col-md-6">
+            <label class="form-label" for="eventId">Event</label>
+            <select name="eventId" id="eventId" class="form-select" onchange="this.form.submit()">
+                @foreach (var ev in Model.Events)
+                {
+                    <option value="@ev.EventId" selected="@(ev.EventId == Model.SelectedEvent.EventId)">@ev.EventName (@ev.EventDate.ToString("dd MMM yyyy"))</option>
+                }
+            </select>
+        </div>
+    </form>
+
+    @if (!Model.Enrolments.Any())
+    {
+        <div class="alert alert-info">Nobody has entered this event yet, so there is nothing to record.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Participant</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var en in Model.Enrolments)
+                    {
+                        <tr>
+                            <td>@en.ParticipantName</td>
+                            <td>@en.CategoryName</td>
+                            <td><partial name="_StatusBadge" model="en.Status" /></td>
+                            <td>
+                                @if (Model.ResultsByEnrolment.TryGetValue(en.EnrolmentId, out var result))
+                                {
+                                    <span class="fw-semibold">@TimeFormat.Hms(result.FinishTimeSeconds)</span>
+                                    <span class="text-muted">&middot; position @result.FinishPosition</span>
+                                }
+                                else
+                                {
+                                    <form asp-action="CaptureResult" method="post" class="d-flex flex-wrap gap-2 align-items-center">
+                                        <input type="hidden" name="eventId" value="@Model.SelectedEvent.EventId" />
+                                        <input type="hidden" name="enrolmentId" value="@en.EnrolmentId" />
+                                        <input type="number" name="hours" min="0" value="0" class="form-control form-control-sm" style="width:70px" title="Hours" />
+                                        <span class="small text-muted">h</span>
+                                        <input type="number" name="minutes" min="0" max="59" value="0" class="form-control form-control-sm" style="width:70px" title="Minutes" />
+                                        <span class="small text-muted">m</span>
+                                        <input type="number" name="seconds" min="0" max="59" value="0" class="form-control form-control-sm" style="width:70px" title="Seconds" />
+                                        <span class="small text-muted">s</span>
+                                        <input type="number" name="position" min="1" placeholder="Pos" class="form-control form-control-sm" style="width:80px" title="Finishing position" />
+                                        <button type="submit" class="btn btn-sm btn-success">Save</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}

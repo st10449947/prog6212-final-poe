@@ -1,0 +1,70 @@
+﻿@model EventDetailsVm
+@{
+    ViewData["Title"] = Model.Event.EventName;
+    var isPast = Model.Event.EventDate.Date < DateTime.Today;
+}
+
+<a asp-action="Index" class="text-decoration-none">&larr; Back to events</a>
+
+<div class="d-flex justify-content-between align-items-start mt-2">
+    <h1 class="h3">@Model.Event.EventName</h1>
+    <partial name="_EventTypeBadge" model="Model.Event.EventType" />
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.Event.BannerImageUrl))
+{
+    <img src="@Model.Event.BannerImageUrl" alt="@Model.Event.EventName banner"
+         class="img-fluid rounded mb-4 w-100" style="max-height:320px;object-fit:cover" />
+}
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <p>@(string.IsNullOrWhiteSpace(Model.Event.Description) ? "No description has been added for this event." : Model.Event.Description)</p>
+    </div>
+    <div class="col-md-4">
+        <ul class="list-group">
+            <li class="list-group-item"><strong>Date:</strong> @Model.Event.EventDate.ToString("dd MMM yyyy")</li>
+            <li class="list-group-item"><strong>Location:</strong> @Model.Event.Location</li>
+            <li class="list-group-item"><strong>Distance:</strong> @Model.Event.Distance km</li>
+            <li class="list-group-item"><strong>Organiser:</strong> @Model.Event.OrganiserName</li>
+        </ul>
+    </div>
+</div>
+
+<h2 class="h5">Categories</h2>
+
+@if (Model.ExistingEnrolment != null)
+{
+    <div class="alert alert-success">
+        You are entered in this event in the <strong>@Model.ExistingEnrolment.CategoryName</strong> category.
+        Status: <partial name="_StatusBadge" model="Model.ExistingEnrolment.Status" />
+        <a asp-action="MyEvents" class="ms-2">View my events</a>
+    </div>
+}
+else if (isPast)
+{
+    <div class="alert alert-secondary">This event has already taken place, so entries are closed.</div>
+}
+else if (!Model.Categories.Any())
+{
+    <div class="alert alert-info">The organiser has not added any categories yet. Please check back soon.</div>
+}
+else
+{
+    <form asp-action="EnterEvent" method="post">
+        <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+
+        @foreach (var c in Model.Categories)
+        {
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="categoryId"
+                       id="category-@c.CategoryId" value="@c.CategoryId" />
+                <label class="form-check-label" for="category-@c.CategoryId">
+                    <strong>@c.CategoryName</strong> &middot; @c.DistanceKm km &middot; up to @c.MaxParticipants runners
+                </label>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-success mt-3">Enter event</button>
+    </form>
+}

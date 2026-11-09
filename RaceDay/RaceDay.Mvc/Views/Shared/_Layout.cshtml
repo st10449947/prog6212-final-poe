@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RaceDay</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/RaceDay.Mvc.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @{
+        var role = Context.Session.GetString("Role");
+        var userId = Context.Session.GetInt32("UserId");
+        var displayName = Context.Session.GetString("DisplayName");
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+        // Returns "active" when the visitor is on one of the listed pages, so the menu highlights it
+        string Active(string controller, params string[] actions) =>
+            string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) &&
+            actions.Any(a => string.Equals(currentAction, a, StringComparison.OrdinalIgnoreCase))
+                ? "active" : "";
+    }
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-raceday">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Race<span>Day</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto">
+                        @if (userId != null && role == "Organiser")
+                        {
+                            <li class="nav-item"><a class="nav-link @Active("Organiser", "Index")" asp-controller="Organiser" asp-action="Index">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link @Active("Organiser", "Events", "CreateEvent", "EditEvent", "Categories", "EditCategory")" asp-controller="Organiser" asp-action="Events">Events</a></li>
+                            <li class="nav-item"><a class="nav-link @Active("Organiser", "Enrolments")" asp-controller="Organiser" asp-action="Enrolments">Enrolments</a></li>
+                            <li class="nav-item"><a class="nav-link @Active("Organiser", "Results")" asp-controller="Organiser" asp-action="Results">Results</a></li>
+                        }
+                        else if (userId != null)
+                        {
+                            <li class="nav-item"><a class="nav-link @Active("Participant", "Index", "Details")" asp-controller="Participant" asp-action="Index">Events</a></li>
+                            <li class="nav-item"><a class="nav-link @Active("Participant", "MyEvents")" asp-controller="Participant" asp-action="MyEvents">My Events</a></li>
+                            <li class="nav-item"><a class="nav-link @Active("Participant", "MyResults")" asp-controller="Participant" asp-action="MyResults">My Results</a></li>
+                            <li class="nav-item"><a class="nav-link @Active("Participant", "Profile")" asp-controller="Participant" asp-action="Profile">Profile</a></li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav align-items-lg-center gap-lg-2">
+                        @if (userId == null)
+                        {
+                            <li class="nav-item"><a class="nav-link @Active("Auth", "Login")" asp-controller="Auth" asp-action="Login">Login</a></li>
+                            <li class="nav-item"><a class="nav-link @Active("Auth", "Register")" asp-controller="Auth" asp-action="Register">Register</a></li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><span class="navbar-text">@displayName</span></li>
+                            <li class="nav-item"><span class="role-pill">@role</span></li>
+                            <li class="nav-item">
+                                <form asp-controller="Auth" asp-action="Logout" method="post">
+                                    <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                                </form>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+        <partial name="_Alerts" />
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="rd-footer">
+        <div class="container d-flex flex-wrap justify-content-between">
+            <span>&copy; @DateTime.Now.Year RaceDay</span>
+            <span>South African road running, walking and cycling events</span>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
